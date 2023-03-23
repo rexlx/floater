@@ -2,10 +2,13 @@
     <div class="card mb-4 has-background-info-light">
             <div class="card-content">
                 <div class="content">
-                {{ note.time }}: capacity: {{ note.capacity }} load: {{ note.load }}
+                    <div class="title has-text-centered">
+                        {{ util }}
+                    </div>
+                capacity | load: {{ note.capacity }} | {{ note.load }}
                 </div>
                 <div class="has-text-right has-text-info-dark mt-2">
-                    <small>_ip_</small>
+                    <small>{{ friendlyTime }}</small>
                 </div>
             </div>
             <footer class="card-footer">
@@ -28,9 +31,14 @@ const props = defineProps({
 })
 
 
-const charLength = computed(() => {
-    let desc = props.note.content.length > 1 ? ' chars' : ' char'
-    return `${ props.note.content.length } ${ desc }`
+const util = computed(() => {
+    let u = Number((props.note.demand/props.note.capacity)*100).toFixed(2)
+    return `${u}%`
+})
+
+const friendlyTime = computed(() => {
+    let d = new Date(props.note.time).toLocaleString()
+    return `${ d }`
 })
 
 </script>
