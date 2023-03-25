@@ -28,11 +28,15 @@ export const useStoreNotes = defineStore('NotesStore', {
         demand_data: {
             labels: [],
             datasets: []
-          }
+          },
+          current: {}
     }
   },
   actions: {
     async getRtsc() {
+        this.demand_data.labels = []
+        this.demand_data.datasets = []
+        this.conditions = []
         let tmp = {
             label: 'demand',
             backgroundColor: '#221f5b',
@@ -46,16 +50,17 @@ export const useStoreNotes = defineStore('NotesStore', {
         const q = query(collection(db, "capacity-aggregator"), orderBy("time", "desc"), limit(24))
         const querySnapshot = await getDocs(q)
             querySnapshot.forEach((doc) => {
-                
+                this.conditions.unshift(doc.data())
                 let d = new Date(doc.data().time).toLocaleString()
                 let dmd = Number(doc.data().demand).toFixed(2)
                 let cap = Number(doc.data().cap).toFixed(2)
-                this.demand_data.labels.push(d)
-                tmp.data.push(dmd)
-                tmp2.data.push(cap)
+                this.demand_data.labels.unshift(d)
+                tmp.data.unshift(dmd)
+                tmp2.data.unshift(cap)
     })
     this.demand_data.datasets.push(tmp)
     this.demand_data.datasets.push(tmp2)
+    this.current = this.conditions[this.conditions.length-1]
     },
     addNote(val) {
         let d = new Date()

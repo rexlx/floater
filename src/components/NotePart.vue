@@ -3,12 +3,12 @@
             <div class="card-content">
                 <div class="content">
                     <div class="title has-text-centered">
-                        {{ util }}
+                        {{ val }}
                     </div>
-                capacity | load: {{ note.capacity }} | {{ note.load }}
+                {{ note }}
                 </div>
                 <div class="has-text-right has-text-info-dark mt-2">
-                    <small>{{ friendlyTime }}</small>
+                    <small>_ip_</small>
                 </div>
             </div>
             <footer class="card-footer">
@@ -23,12 +23,17 @@ import { computed } from "vue";
 import { useStoreNotes } from '@/stores/noteStore.js'
 
 const storeNotes = useStoreNotes()
-const props = defineProps({
-    note: {
-        type: Object,
-        required: true
-    }
-})
+const props = defineProps(['note', 'val'])
+// const props = defineProps({
+//     note: {
+//         type: Number,
+//         required: true
+//     }, 
+//     val: {
+//         type: String,
+//         required: false
+//     }
+// })
 
 
 const util = computed(() => {
@@ -37,7 +42,7 @@ const util = computed(() => {
 })
 
 const friendlyTime = computed(() => {
-    let d = new Date(props.note.time).toLocaleString()
+    let d = new Date(props.note.date).toLocaleString()
     return `${ d }`
 })
 

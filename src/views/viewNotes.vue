@@ -6,7 +6,7 @@
             </template>
         </AddNote> -->
         <Line :data="storeNotes.demand_data" />
-        <NotePart v-for="note in storeNotes.conditions" :key="note.id" :note="note" />
+        <NotePart v-for="note, val in storeNotes.current" :key="note.id" :note="note" :val="val"/>
         
     </div>
 </template>
