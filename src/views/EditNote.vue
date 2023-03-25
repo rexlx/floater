@@ -13,14 +13,17 @@
 import { useStoreNotes } from '@/stores/noteStore.js'
 import AddNote from '../components/AddNote.vue';
 import {ref} from 'vue'
-import {useRoute} from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const content = ref('')
 const storeNotes = useStoreNotes()
 const route = useRoute()
-content.value = storeNotes.getNoteContent(parseInt(route.params.id))
+const router = useRouter()
+content.value = storeNotes.getNoteContent(route.params.id)
+console.log(content, route.params.id)
+// content.value = storeNotes.getNoteContent(parseInt(route.params.id))
 const handleSaveClicked = () => {
     storeNotes.updateNote(route.params.id, content.value)
-    route.push("/")
+    router.push("/")
 }
 </script>

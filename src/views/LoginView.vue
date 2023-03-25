@@ -41,6 +41,9 @@
 import { ref, computed, reactive } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useFirestore } from "@/stores/authStore.js";
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 const authStore = useFirestore()
 
@@ -66,7 +69,9 @@ const onSubmit = () => {
             // console.log(creds)
             authStore.login(creds)
         }
+        router.push("/")
     }
+    
 }
 </script>
 

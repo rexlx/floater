@@ -1,39 +1,44 @@
 // stores/counter.js
 import { defineStore } from 'pinia'
-import { collection, getDocs, query, limit, orderBy } from "firebase/firestore";
-// import { getAuth } from "firebase/auth";
+import { 
+    collection,
+    onSnapshot,
+    query,
+    limit,
+    doc,
+    deleteDoc,
+    orderBy,
+    addDoc,
+    updateDoc
+ } from "firebase/firestore";
 import { db } from "@/firebase/config.js";
+import { useFirestore } from "@/stores/authStore.js";
 
+let notesColRef
 export const useStoreNotes = defineStore('NotesStore', {
   state: () => {
     return {
-        notes: [
-            {
-                id: 1,
-                content: "i can move through time and space but",
-                date: '20230101'
-            },
-            {
-                id: 2,
-                content: "space grinder moves space and time finer",
-                date: '20230101'
-            },
-            {
-                id: 3,
-                content: "finds a way to convince us we dont mind it",
-                date: '20230101'
-            }
-        ],
+        notes: [],
         conditions: [],
         demand_data: {
             labels: [],
             datasets: []
           },
-          current: {}
+        current: {},
+        isLoaded: {
+            notes: false,
+            charts: false
+        }
     }
   },
   actions: {
+    init() {
+        const storeAuth = useFirestore()
+        notesColRef = collection(db, "users", storeAuth.user.id, "notes")
+        this.getNotes()
+    },
     async getRtsc() {
+        this.isLoaded.charts = false
         this.demand_data.labels = []
         this.demand_data.datasets = []
         this.conditions = []
@@ -48,8 +53,8 @@ export const useStoreNotes = defineStore('NotesStore', {
             data: []
           }
         const q = query(collection(db, "capacity-aggregator"), orderBy("time", "desc"), limit(24))
-        const querySnapshot = await getDocs(q)
-            querySnapshot.forEach((doc) => {
+        onSnapshot(q, (qs) => {
+            qs.forEach((doc) => {
                 this.conditions.unshift(doc.data())
                 let d = new Date(doc.data().time).toLocaleString()
                 let dmd = Number(doc.data().demand).toFixed(2)
@@ -57,27 +62,44 @@ export const useStoreNotes = defineStore('NotesStore', {
                 this.demand_data.labels.unshift(d)
                 tmp.data.unshift(dmd)
                 tmp2.data.unshift(cap)
-    })
-    this.demand_data.datasets.push(tmp)
-    this.demand_data.datasets.push(tmp2)
-    this.current = this.conditions[this.conditions.length-1]
+            })
+            this.demand_data.datasets.push(tmp)
+            this.demand_data.datasets.push(tmp2)
+            this.current = this.conditions[23]
+            this.isLoaded.charts = true
+        })
     },
-    addNote(val) {
-        let d = new Date()
-        let note = {
-            id: d.getTime(),
-            content: val,
-            date: d
-        }
-      this.notes.unshift(note)
+    async getNotes() {
+        this.isLoaded.notes = false
+        const q = query(notesColRef, orderBy("date", "desc"), limit(10))
+        onSnapshot(q, (qs) => {
+            this.notes = []
+            qs.forEach((doc) => {
+                let note = {
+                    id: doc.id,
+                    content: doc.data().content,
+                    date: doc.data().date
+                }
+                this.notes.push(note)
+            })
+        this.isLoaded.notes = true
+        })
     },
-    deleteNote(id) {
-        this.notes = this.notes.filter(note => note.id !== id)
+    async addNote(val) {
+        let d = Date.now()
+        const docRef = await addDoc(notesColRef, {
+            date: d,
+            content: val
+          })
     },
-    updateNote(id, content) {
-        let index = this.notes.findIndex(note => note.id === id )
-        console.log("update called", id, content, index, this.notes[0])
-        this.notes[index].content = content
+    async deleteNote(id) {
+        await deleteDoc(doc(notesColRef, id))
+    },
+    async updateNote(id, content) {
+        await updateDoc(doc(notesColRef, id), {
+            content: content,
+            date: Date.now()
+        })
       }
   },
   getters: {

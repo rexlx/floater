@@ -28,6 +28,9 @@
                 <RouterLink class="navbar-item" to="/stats" active-class="is-active">
                 errata
                 </RouterLink>
+                <RouterLink class="navbar-item" to="/charts" active-class="is-active">
+                charts
+                </RouterLink>
             </div>
         </div>
   </div>

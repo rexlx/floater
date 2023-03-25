@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import ViewNotes from '@/views/ViewNotes.vue'
 import EditNote from '@/views/EditNote.vue'
 import ViewStats from '@/views/ViewStats.vue'
+import ViewCharts from '@/views/ViewCharts.vue'
 import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
@@ -21,6 +22,11 @@ const router = createRouter({
             path: '/login',
             name: 'login',
             component: LoginView
+        },
+        {
+            path: '/charts',
+            name: 'charts',
+            component: ViewCharts
         },
         {
             path: '/stats',
