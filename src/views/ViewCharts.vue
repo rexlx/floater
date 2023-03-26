@@ -2,7 +2,9 @@
     <div class="charts">
       <progress v-if="!storeNotes.isLoaded.charts" class="progress is-medium is-link" max="100" />
         <template v-else>
+          <Line :data="storeNotes.cpu_data" />
           <Line :data="storeNotes.demand_data" />
+          <Line :data="getDirectConnects" />
         </template>
         
         <!-- <NotePart v-for="note, val in storeNotes.current" :key="note.id" :note="note" :val="val"/> -->
@@ -11,7 +13,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue'
+import {computed, onMounted} from 'vue'
 // import NotePart from '../components/NotePart.vue';
 // import AddNote from '../components/AddNote.vue';
 import { useStoreNotes } from "@/stores/noteStore.js";
@@ -37,7 +39,42 @@ import { Chart as ChartJS,
 
 const storeNotes = useStoreNotes()
 onMounted(() => {
+  storeNotes.getCpu()
   storeNotes.getRtsc()
+})
+
+const parseByKey = (keyName) => {
+  let lineColor = `#${Math.floor(Math.random()*16777215).toString(16)}`
+  let tmp = {
+          label: keyName,
+          backgroundColor: lineColor,
+          data: []
+        }
+  for (let d of storeNotes.conditions) {
+    tmp.data.unshift(d[keyName])
+  }
+  return tmp
+}
+
+const getLabels = () => {
+  let lbs = []
+  for (let d of storeNotes.conditions) {
+    let l = new Date(d['time']).toLocaleString()
+    lbs.unshift(l)
+  }
+  return lbs
+}
+
+const getDirectConnects = computed(() => {
+  let lbs = getLabels()
+  let dcData = {labels: lbs, datasets: []}
+  let keys = ['dc_e', 'dc_l', 'dc_n', 'dc_r', 'dc_s']
+  for (let k of keys) {
+    let dataset = parseByKey(k)
+    dcData.datasets.push(dataset)
+  }
+  console.log(dcData)
+  return dcData
 })
 
 </script>

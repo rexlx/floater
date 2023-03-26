@@ -24,6 +24,10 @@ export const useStoreNotes = defineStore('NotesStore', {
             labels: [],
             datasets: []
           },
+        cpu_data: {
+            labels: [],
+            datasets: []
+          },
         current: {},
         isLoaded: {
             notes: false,
@@ -83,6 +87,25 @@ export const useStoreNotes = defineStore('NotesStore', {
                 this.notes.push(note)
             })
         this.isLoaded.notes = true
+        })
+    },
+    async getCpu() {
+        this.cpu_data.labels = []
+        this.cpu_data.datasets = []
+        let tmp = {
+            label: 'cpu usage',
+            backgroundColor: '#620056',
+            data: []
+          }
+        const q = query(collection(db, "cpu-aggregator"), orderBy("time", "desc"), limit(24))
+        onSnapshot(q, (qs) => {
+            qs.forEach((doc) => {
+                let d = new Date(doc.data().time).toLocaleString()
+                let dmd = Number(doc.data().percent_used).toFixed(5)
+                this.cpu_data.labels.unshift(d)
+                tmp.data.unshift(dmd)
+            })
+            this.cpu_data.datasets.push(tmp)
         })
     },
     async addNote(val) {
