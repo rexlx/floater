@@ -20,7 +20,6 @@ const storeNotes = useStoreNotes()
 const route = useRoute()
 const router = useRouter()
 content.value = storeNotes.getNoteContent(route.params.id)
-console.log(content, route.params.id)
 // content.value = storeNotes.getNoteContent(parseInt(route.params.id))
 const handleSaveClicked = () => {
     storeNotes.updateNote(route.params.id, content.value)

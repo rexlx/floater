@@ -24,6 +24,12 @@
                         <input class="input" type="password" v-model="creds.password">
                     </div>
                 </div>
+                <div v-if="register" class="field">
+                    <label class="label">multipass</label>
+                    <div class="control">
+                        <input class="input" type="text" v-model="apiKey">
+                    </div>
+                </div>
                 <div class="field is-grouped is-grouped-right">
                     <p class="control">
                         <button class="button is-primary">
@@ -38,16 +44,17 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useFirestore } from "@/stores/authStore.js";
-import { useRouter } from 'vue-router';
+import { ref, computed, reactive } from 'vue'
+import notie from 'notie'
+import { useFirestore } from "@/stores/authStore.js"
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const authStore = useFirestore()
 
 const register = ref(false)
+const apiKey = ref('')
 const title = computed(() => {
     return register.value ? 'new user' : 'login'
 })
@@ -63,10 +70,38 @@ const onSubmit = () => {
     }
     else {
         if (register.value) {
-            authStore.register(creds)
+            let data = {
+                key: apiKey.value
+            }
+            fetch(import.meta.env.VITE_REG_URI, {
+                method: "POST",
+                body: JSON.stringify(data),
+                // mode: "no-cors"
+            })
+            .then((res) => {
+                if (res.status !== 200) {
+                    notie.alert({
+                        type: "error",
+                        text: "unknown registration code"
+                    })
+                } else {
+                    authStore.register(creds)
+                    notie.alert({
+                        type: "success",
+                        text: "you are now in a gang"
+                    })
+                    router.push("/")
+                }
+            }).catch((error) => {
+                notie.alert({
+                        type: "error",
+                        text: "unknown registration code or something, idk"
+                    })
+                console.log(error)
+            })
+            
         }
         else {
-            // console.log(creds)
             authStore.login(creds)
         }
         router.push("/")

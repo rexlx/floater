@@ -51,7 +51,7 @@ const parseByKey = (keyName) => {
           data: []
         }
   for (let d of storeNotes.conditions) {
-    tmp.data.unshift(d[keyName])
+    tmp.data.push(d[keyName])
   }
   return tmp
 }
@@ -60,7 +60,7 @@ const getLabels = () => {
   let lbs = []
   for (let d of storeNotes.conditions) {
     let l = new Date(d['time']).toLocaleString()
-    lbs.unshift(l)
+    lbs.push(l)
   }
   return lbs
 }
@@ -73,7 +73,6 @@ const getDirectConnects = computed(() => {
     let dataset = parseByKey(k)
     dcData.datasets.push(dataset)
   }
-  console.log(dcData)
   return dcData
 })
 

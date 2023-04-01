@@ -30,18 +30,15 @@ export const useFirestore = defineStore('authStore', {
       })
       .catch((error) => {
         const err = error.message
-        console.log(err)
       })
     },
     login(creds) {
       signInWithEmailAndPassword(authApi, creds.email, creds.password)
       .then((userCredential) => {
         const user = userCredential.user
-        console.log(user)
       })
       .catch((error) => {
         const err = error.message
-        console.log(error.code)
       })
     },
     logout() {
@@ -50,7 +47,7 @@ export const useFirestore = defineStore('authStore', {
         console.log('signed out')
       })
       .catch((err) => {
-        console.log(err)
+        // do thing
       })
     }
   }

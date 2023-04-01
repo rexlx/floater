@@ -48,7 +48,7 @@ export const useStoreNotes = defineStore('NotesStore', {
         this.conditions = []
         let tmp = {
             label: 'demand',
-            backgroundColor: '#221f5b',
+            backgroundColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
             data: []
           }
           let tmp2 = {
@@ -94,7 +94,7 @@ export const useStoreNotes = defineStore('NotesStore', {
         this.cpu_data.datasets = []
         let tmp = {
             label: 'cpu usage',
-            backgroundColor: '#620056',
+            backgroundColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
             data: []
           }
         const q = query(collection(db, "cpu-aggregator"), orderBy("time", "desc"), limit(24))
