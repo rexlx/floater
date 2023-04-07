@@ -66,7 +66,10 @@ const creds = reactive({
 
 const onSubmit = () => {
     if (!creds.email || !creds.password) {
-        alert('anonymous access is forbidden')
+        notie.alert({
+                        type: "error",
+                        text: "anonymous access disabled"
+                    })
     }
     else {
         if (register.value) {
@@ -103,8 +106,8 @@ const onSubmit = () => {
         }
         else {
             authStore.login(creds)
+            router.push("/")
         }
-        router.push("/")
     }
     
 }

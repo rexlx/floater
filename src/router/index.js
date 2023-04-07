@@ -42,7 +42,7 @@ router.beforeEach(async (t, f) => {
     if (!authStore.user.id &&  t.name !== "login") {
         return {name: 'login'}
     }
-    if (authStore.user.id && t.name === "auth") {
+    if (authStore.user.id && t.name === "login") {
         return {name: 'notes'}
     }
 })
