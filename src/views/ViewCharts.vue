@@ -2,7 +2,7 @@
     <div class="charts">
       <progress v-if="!storeNotes.isLoaded.charts" class="progress is-medium is-link" max="100" />
         <template v-else>
-          <Line :data="storeNotes.cpu_data" />
+          <Line :data="storeNotes.spp_data" />
           <Line :data="storeNotes.demand_data" />
           <Line :data="getDirectConnects" />
         </template>
@@ -39,7 +39,7 @@ import { Chart as ChartJS,
 
 const storeNotes = useStoreNotes()
 onMounted(() => {
-  storeNotes.getCpu()
+  storeNotes.getSpp()
   storeNotes.getRtsc()
 })
 

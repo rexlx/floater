@@ -24,7 +24,7 @@ export const useStoreNotes = defineStore('NotesStore', {
             labels: [],
             datasets: []
           },
-        cpu_data: {
+        spp_data: {
             labels: [],
             datasets: []
           },
@@ -89,23 +89,31 @@ export const useStoreNotes = defineStore('NotesStore', {
         this.isLoaded.notes = true
         })
     },
-    async getCpu() {
-        this.cpu_data.labels = []
-        this.cpu_data.datasets = []
+    async getSpp() {
+        this.spp_data.labels = []
+        this.spp_data.datasets = []
         let tmp = {
-            label: 'cpu usage',
-            backgroundColor: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+            label: 'hb hub avg',
+            backgroundColor: `#${Math.floor(Math.random()*956265600).toString(16)}`,
             data: []
           }
-        const q = query(collection(db, "cpu-aggregator"), orderBy("time", "desc"), limit(24))
+          let tmp2 = {
+            label: 'hb bus avg',
+            backgroundColor: `#${Math.floor(Math.random()*956265600).toString(16)}`,
+            data: []
+          }
+        const q = query(collection(db, "spp_aggregator"), orderBy("time", "desc"), limit(16))
         onSnapshot(q, (qs) => {
             qs.forEach((doc) => {
                 let d = new Date(doc.data().time).toLocaleString()
-                let dmd = Number(doc.data().percent_used).toFixed(5)
-                this.cpu_data.labels.unshift(d)
-                tmp.data.unshift(dmd)
+                let ha = Number(doc.data().data.hb_hub_avg).toFixed(5)
+                let ba = Number(doc.data().data.hb_bus_avg).toFixed(5)
+                this.spp_data.labels.unshift(d)
+                tmp.data.unshift(ha)
+                tmp2.data.unshift(ba)
             })
-            this.cpu_data.datasets.push(tmp)
+            this.spp_data.datasets.push(tmp)
+            this.spp_data.datasets.push(tmp2)
         })
     },
     async addNote(val) {
