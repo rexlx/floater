@@ -1,5 +1,6 @@
-// stores/counter.js
+// imports
 import { defineStore } from 'pinia'
+
 import { 
     collection,
     onSnapshot,
@@ -11,15 +12,21 @@ import {
     addDoc,
     updateDoc
  } from "firebase/firestore";
+
 import { db } from "@/firebase/config.js";
+
 import { useFirestore } from "@/stores/authStore.js";
 
+// firebase collection references
 let notesColRef
+let numbersColRef
+
 export const useStoreNotes = defineStore('NotesStore', {
   state: () => {
     return {
         notes: [],
         conditions: [],
+        numbers: [],
         demand_data: {
             labels: [],
             datasets: []
@@ -31,7 +38,8 @@ export const useStoreNotes = defineStore('NotesStore', {
         current: {},
         isLoaded: {
             notes: false,
-            charts: false
+            charts: false,
+            numbers: false
         }
     }
   },
@@ -39,7 +47,9 @@ export const useStoreNotes = defineStore('NotesStore', {
     init() {
         const storeAuth = useFirestore()
         notesColRef = collection(db, "users", storeAuth.user.id, "notes")
+        numbersColRef = collection(db, "users", storeAuth.user.id, "numbers")
         this.getNotes()
+        this.getRtsc()
     },
     async getRtsc() {
         this.isLoaded.charts = false
@@ -89,6 +99,27 @@ export const useStoreNotes = defineStore('NotesStore', {
         this.isLoaded.notes = true
         })
     },
+    async getNumbers() {
+        this.isLoaded.numbers = false
+        const q = query(numbersColRef, orderBy("date", "desc"), limit(10))
+        onSnapshot(q, (qs) => {
+            this.numbers = []
+            qs.forEach((doc) => {
+                let num = {
+                    id: doc.id,
+                    date: doc.data().date,
+                    name: doc.data().name,
+                    values: doc.data().values,
+                    total: doc.data().total,
+                    avg: doc.data().avg,
+                    max: doc.data().max,
+                    min: doc.data().min
+                }
+                this.numbers.push(num)
+            })
+        this.isLoaded.numbers = true
+        })
+    },
     async getSpp() {
         this.spp_data.labels = []
         this.spp_data.datasets = []
@@ -131,7 +162,22 @@ export const useStoreNotes = defineStore('NotesStore', {
             content: content,
             date: Date.now()
         })
-      }
+      },
+    async createNumberTracker(val) {
+        console.log(numbersColRef, 'dbug')
+    const docRef = await addDoc(numbersColRef, {
+            date: val.date,
+            name: val.name,
+            values: val.values,
+            total: val.total,
+            avg: val.avg,
+            max: val.max,
+            min: val.min
+        })
+    },
+    async deleteNote(id) {
+        await deleteDoc(doc(numbersColRef, id))
+    },
   },
   getters: {
     getNoteContent: (state) => {

@@ -100,7 +100,7 @@ const onSubmit = () => {
                         type: "error",
                         text: "unknown registration code or something, idk"
                     })
-                console.log(error)
+                console.log(error, 'error?')
             })
             
         }

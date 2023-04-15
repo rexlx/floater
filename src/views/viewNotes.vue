@@ -3,6 +3,7 @@
         <AddNote v-model="newNote" ref="addNoteRef">
             <template #buttons>
                 <button @click="addNote" :disabled="!newNote" class="button is-link">submit</button>
+
             </template>
         </AddNote>
         <progress v-if="!storeNotes.isLoaded.notes" class="progress is-medium is-link" max="100" />

@@ -25,8 +25,8 @@
                 <RouterLink class="navbar-item" to="/" active-class="is-active">
                 notes
                 </RouterLink>
-                <RouterLink class="navbar-item" to="/stats" active-class="is-active">
-                errata
+                <RouterLink class="navbar-item" to="/numbers" active-class="is-active">
+                numbers
                 </RouterLink>
                 <RouterLink class="navbar-item" to="/charts" active-class="is-active">
                 charts
