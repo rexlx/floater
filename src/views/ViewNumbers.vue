@@ -2,15 +2,12 @@
     <div class="numbers">
         <progress v-if="!storeNotes.isLoaded.numbers" class="progress is-medium is-link" max="100" />
         <template v-else>
-            <div class="card">
+            <div class="card mb-3">
                 <input class="input is-link" type="text" placeholder="name" v-model="newName" >
                 <button @click="createData" class="button">create</button>
             </div>
             <div v-for="num in storeNotes.numbers" :key="num.id" :num="num">
                 <NumbersPart :num="num" v-model="newValue">
-                    <template #buttons>
-                        <button @click.prevent="addNum" class="button is-link" :disabled="!num">add</button>
-                    </template>
                 </NumbersPart>
             </div>
             <div>
@@ -25,7 +22,7 @@ import { useStoreNotes } from "@/stores/noteStore.js";
 import NumbersPart from '../components/NumberPart.vue'
 
 const storeNotes = useStoreNotes()
-const newValue = ref('')
+const newValue = ref(null)
 const addValueRef = ref(null)
 const newName = ref('')
 
@@ -49,8 +46,6 @@ onMounted(() => {
     console.log()
 })
 
-const addNum = () => {
-    console.log(newValue, "dbug")
-}
+
 
 </script>

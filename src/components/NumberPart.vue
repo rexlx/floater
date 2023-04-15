@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card mb-3">
                     <header class="card-header">
                         <p class="card-header-title">
                             {{ num.name }}
@@ -11,16 +11,8 @@
                         </div>
                     </div>
                     <footer class="card-footer">
-                        <input 
-                            class="input is-link"
-                            type="text"
-                            placeholder="enter value"
-                            :value="modelValue"
-                            @input="$emit('update:modelValue', $event.target.value)"
-                             >
-                        <div class="control">
-                            <slot name="buttons" />
-                        </div>
+                        <button @click.prevent="addNum" class="button is-link" :disabled="!newNum">add</button>
+                        <input class="input" type="text" v-model="newNum">
                              
                     </footer>
                 </div>
@@ -30,10 +22,15 @@
 import { useStoreNotes } from '@/stores/noteStore.js'
 import { ref } from "vue";
 
-const props = defineProps(['modelValue', 'num'])
+const props = defineProps(['modelValue', 'num',])
 const emit = defineEmits(['update:modelValue'])
 const newNum = ref(0)
 const storeNotes = useStoreNotes()
 
-
+const addNum = () => {
+    let n = parseFloat(newNum.value)
+    props.num.values.push(n)
+    storeNotes.updateNumber(props.num.id, props.num.values)
+    newNum.value = 0
+}
 </script>

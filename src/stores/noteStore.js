@@ -164,7 +164,7 @@ export const useStoreNotes = defineStore('NotesStore', {
         })
       },
     async createNumberTracker(val) {
-        console.log(numbersColRef, 'dbug')
+        console.log(numbersColRef, 'create')
     const docRef = await addDoc(numbersColRef, {
             date: val.date,
             name: val.name,
@@ -175,9 +175,12 @@ export const useStoreNotes = defineStore('NotesStore', {
             min: val.min
         })
     },
-    async deleteNote(id) {
-        await deleteDoc(doc(numbersColRef, id))
-    },
+    async updateNumber(id, values) {
+        console.log(values)
+        await updateDoc(doc(numbersColRef, id), {
+            values: values,
+        })
+      },
   },
   getters: {
     getNoteContent: (state) => {
