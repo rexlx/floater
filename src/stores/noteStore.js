@@ -166,19 +166,22 @@ export const useStoreNotes = defineStore('NotesStore', {
     async createNumberTracker(val) {
         console.log(numbersColRef, 'create')
     const docRef = await addDoc(numbersColRef, {
-            date: val.date,
-            name: val.name,
+            date:   val.date,
+            name:   val.name,
             values: val.values,
-            total: val.total,
-            avg: val.avg,
-            max: val.max,
-            min: val.min
+            total:  val.total,
+            avg:    val.avg,
+            max:    val.max,
+            min:    val.min
         })
     },
-    async updateNumber(id, values) {
-        console.log(values)
+    async updateNumber(id, val) {
         await updateDoc(doc(numbersColRef, id), {
-            values: values,
+            values: val.values,
+            total:  val.total,
+            avg:    val.avg,
+            max:    val.max,
+            min:    val.min
         })
       },
   },

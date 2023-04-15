@@ -2,7 +2,7 @@
     <div class="numbers">
         <progress v-if="!storeNotes.isLoaded.numbers" class="progress is-medium is-link" max="100" />
         <template v-else>
-            <div class="card mb-3">
+            <div class="card mb-3 has-background-dark">
                 <input class="input is-link" type="text" placeholder="name" v-model="newName" >
                 <button @click="createData" class="button">create</button>
             </div>
