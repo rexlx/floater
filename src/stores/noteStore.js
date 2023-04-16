@@ -49,7 +49,7 @@ export const useStoreNotes = defineStore('NotesStore', {
         notesColRef = collection(db, "users", storeAuth.user.id, "notes")
         numbersColRef = collection(db, "users", storeAuth.user.id, "numbers")
         this.getNotes()
-        this.getRtsc()
+        // this.getRtsc()
     },
     async getRtsc() {
         this.isLoaded.charts = false
