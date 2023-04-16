@@ -3,8 +3,8 @@
         <progress v-if="!storeNotes.isLoaded.numbers" class="progress is-medium is-link" max="100" />
         <template v-else>
             <div class="card mb-3 has-background-dark">
-                <input class="input is-link" type="text" placeholder="name" v-model="newName" >
-                <button @click="createData" class="button">create</button>
+                <input class="input is-link has-background-success-light" type="text" placeholder="name" v-model="newName" >
+                <button @click="createData" class="button has-background-success">create</button>
             </div>
             <div v-for="num in storeNotes.numbers" :key="num.id" :num="num">
                 <NumbersPart :num="num" v-model="newValue">

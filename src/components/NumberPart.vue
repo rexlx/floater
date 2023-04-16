@@ -1,21 +1,19 @@
 <template>
     <div class="card mb-3 has-background-grey-darker">
-                    <header class="card-header">
-                        <p class="card-header-title has-background-link has-text-centered">
-                            {{ num.name }}
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="content has-text-primary">
-                            total: {{ num.total }}, average: {{ num.avg }}
-                        </div>
-                    </div>
-                    <footer class="card-footer">
-                        <button @click.prevent="addNum" class="button has-background-info-light" :disabled="!newNum">add</button>
-                        <input class="input has-background-grey" type="text" v-model="newNum">
-                             
-                    </footer>
-                </div>
+        <div class="title has-text-centered has-background-link">
+            {{ num.name }}
+        </div>
+        <div class="card-content">
+            <div class="content has-text-primary has-text-centered">
+                total: {{ num.total }}, average: {{ num.avg }}
+            </div>
+        </div>
+        <footer class="card-footer">
+            <button @click.prevent="addNum" class="button has-background-link has-text-black" :disabled="!newNum">add</button>
+            <input class="input has-background-success-light" type="text" v-model="newNum">
+                    
+        </footer>
+    </div>
 </template>
 
 <script setup>
@@ -32,7 +30,7 @@ const addNum = () => {
     props.num.values.push(n)
     quickMaths(props.num)
     storeNotes.updateNumber(props.num.id, props.num)
-    newNum.value = 0
+    newNum.value = null
 }
 
 const quickMaths = (num) => {
