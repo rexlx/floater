@@ -1,16 +1,17 @@
 <template>
-    <div class="card mb-3 has-background-grey-darker">
-        <div class="title has-text-centered has-background-link">
+    <div class="card mb-4 has-background-info-light">
+        <div class="title has-text-centered">
             {{ num.name }}
         </div>
         <div class="card-content">
-            <div class="content has-text-primary has-text-centered">
-                total: {{ num.total }}, average: {{ num.avg }}
+            <div class="content has-text-centered">
+                <!-- total: {{ num.total }}, average: {{ num.avg }} -->
+                {{ summary }}
             </div>
         </div>
         <footer class="card-footer">
-            <button @click.prevent="addNum" class="button has-background-link has-text-black" :disabled="!newNum">add</button>
-            <input class="input has-background-success-light" type="text" v-model="newNum">
+            <button @click.prevent="addNum" class="button has-background-info has-text-white" :disabled="!newNum">add</button>
+            <input class="input" type="text" v-model="newNum">
                     
         </footer>
     </div>
@@ -18,7 +19,7 @@
 
 <script setup>
 import { useStoreNotes } from '@/stores/noteStore.js'
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const props = defineProps(['modelValue', 'num',])
 const emit = defineEmits(['update:modelValue'])
@@ -42,4 +43,8 @@ const quickMaths = (num) => {
     num.min = Math.min(...num.values)
     num.max = Math.max(...num.values)
 }
+
+const summary = computed(() => {
+    return `total: ${Math.round((props.num.total + Number.EPSILON) * 100) / 100}  average: ${Math.round((props.num.avg + Number.EPSILON) * 100) / 100}`
+})
 </script>
