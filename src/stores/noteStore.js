@@ -21,6 +21,12 @@ import { useFirestore } from "@/stores/authStore.js";
 let notesColRef
 let numbersColRef
 
+// snapshot refs for unsub method
+let unsubFromNotes = null
+let unsubFromNumbers = null
+let unsubFromRTSC = null
+let unsubFromSPP = null
+
 export const useStoreNotes = defineStore('NotesStore', {
   state: () => {
     return {
@@ -53,6 +59,7 @@ export const useStoreNotes = defineStore('NotesStore', {
     },
     async getRtsc() {
         this.isLoaded.charts = false
+        this.checkSnapshot(unsubFromRTSC)
         this.demand_data.labels = []
         this.demand_data.datasets = []
         this.conditions = []
@@ -67,7 +74,7 @@ export const useStoreNotes = defineStore('NotesStore', {
             data: []
           }
         const q = query(collection(db, "capacity-aggregator"), orderBy("time", "desc"), limit(24))
-        onSnapshot(q, (qs) => {
+        unsubFromRTSC = onSnapshot(q, (qs) => {
             qs.forEach((doc) => {
                 this.conditions.unshift(doc.data())
                 let d = new Date(doc.data().time).toLocaleString()
@@ -85,8 +92,9 @@ export const useStoreNotes = defineStore('NotesStore', {
     },
     async getNotes() {
         this.isLoaded.notes = false
+        this.checkSnapshot(unsubFromNotes)
         const q = query(notesColRef, orderBy("date", "desc"), limit(10))
-        onSnapshot(q, (qs) => {
+        unsubFromNotes = onSnapshot(q, (qs) => {
             this.notes = []
             qs.forEach((doc) => {
                 let note = {
@@ -101,8 +109,9 @@ export const useStoreNotes = defineStore('NotesStore', {
     },
     async getNumbers() {
         this.isLoaded.numbers = false
+        this.checkSnapshot(unsubFromNumbers)
         const q = query(numbersColRef, orderBy("date", "desc"), limit(10))
-        onSnapshot(q, (qs) => {
+        unsubFromNumbers = onSnapshot(q, (qs) => {
             this.numbers = []
             qs.forEach((doc) => {
                 let num = {
@@ -121,6 +130,7 @@ export const useStoreNotes = defineStore('NotesStore', {
         })
     },
     async getSpp() {
+        this.checkSnapshot(unsubFromSPP)
         this.spp_data.labels = []
         this.spp_data.datasets = []
         let tmp = {
@@ -134,7 +144,7 @@ export const useStoreNotes = defineStore('NotesStore', {
             data: []
           }
         const q = query(collection(db, "spp_aggregator"), orderBy("time", "desc"), limit(16))
-        onSnapshot(q, (qs) => {
+        unsubFromSPP = onSnapshot(q, (qs) => {
             qs.forEach((doc) => {
                 let d = new Date(doc.data().time).toLocaleString()
                 let ha = Number(doc.data().data.hb_hub_avg).toFixed(5)
@@ -184,6 +194,13 @@ export const useStoreNotes = defineStore('NotesStore', {
             min:    val.min
         })
       },
+      checkSnapshot(ss) {
+        // if a previous user was logged in, their snapshot will still hold a value
+        if (ss) {
+            // calling the () method on it calls unsub
+            ss()
+        }
+      }
   },
   getters: {
     getNoteContent: (state) => {
