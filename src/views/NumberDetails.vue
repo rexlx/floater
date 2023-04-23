@@ -1,6 +1,6 @@
 <template>
     <div class="details">
-        <table class="table has-background-info-light">
+        <table class="table has-background-primary-light">
             <thead>
                 <tr>
                     <th>min</th>
@@ -11,22 +11,22 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ num.min }}</td>
-                    <td>{{ num.max }}</td>
-                    <td>{{ num.avg }}</td>
-                    <td>{{ num.total }}</td>
+                    <td>{{ tableData.min }}</td>
+                    <td>{{ tableData.max }}</td>
+                    <td>{{ tableData.avg }}</td>
+                    <td>{{ tableData.total }}</td>
                 </tr>
             </tbody>
         </table>
         <!-- "num in storeNotes.numbers" :key="num.id" :num="num" -->
         <div class="card mb-2 has-text-justified has-background-primary" v-for="number in num.values" :key="number">
-            {{ number.date }}: {{ number.num }}
+            {{ number.date }}: <strong class="has-text-grey-dark">{{ number.num }}</strong>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { reactive, onMounted } from 'vue';
+    import { reactive, onMounted, computed } from 'vue';
     import { useStoreNotes } from "@/stores/noteStore.js";
     import { useRoute } from 'vue-router'
 
@@ -52,5 +52,14 @@
 
     onMounted(() => {
         setDetails(num)
+    })
+
+    const tableData = computed(() => {
+        return {
+            min: `${Math.round((num.min + Number.EPSILON) * 100) / 100}`,
+            max: `${Math.round((num.max + Number.EPSILON) * 100) / 100}`,
+            avg: `${Math.round((num.avg + Number.EPSILON) * 100) / 100}`,
+            total: `${Math.round((num.total + Number.EPSILON) * 100) / 100}`
+        }
     })
 </script>
