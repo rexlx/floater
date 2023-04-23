@@ -1,6 +1,6 @@
 <template>
     <div class="details">
-        <table class="table">
+        <table class="table has-background-info-light">
             <thead>
                 <tr>
                     <th>min</th>
@@ -19,10 +19,8 @@
             </tbody>
         </table>
         <!-- "num in storeNotes.numbers" :key="num.id" :num="num" -->
-        <div class="detail mb-2" v-for="number in num.values" :key="number">
-            <p>date: {{ number.date }} <br>
-                amount: {{ number.num }}
-            </p>
+        <div class="card mb-2 has-text-justified has-background-primary" v-for="number in num.values" :key="number">
+            {{ number.date }}: {{ number.num }}
         </div>
     </div>
 </template>
@@ -30,7 +28,10 @@
 <script setup>
     import { reactive, onMounted } from 'vue';
     import { useStoreNotes } from "@/stores/noteStore.js";
-    import { useRoute, useRouter } from 'vue-router'
+    import { useRoute } from 'vue-router'
+
+    const storeNotes = useStoreNotes()
+    const route = useRoute()
 
     const num = reactive({
         min: 0,
@@ -48,8 +49,6 @@
         num.total = n.total
         num.values = n.values
     }
-    const storeNotes = useStoreNotes()
-    const route = useRoute()
 
     onMounted(() => {
         setDetails(num)

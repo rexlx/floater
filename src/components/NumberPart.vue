@@ -22,10 +22,7 @@ import { useStoreNotes } from '@/stores/noteStore.js'
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router'
 
-// const newValue = ref(null)
-// const addValueRef = ref(null)
-// const newName = ref('')
-// const route = useRoute()
+
 const router = useRouter()
 
 const props = defineProps(['modelValue', 'num',])
@@ -47,12 +44,14 @@ const addNum = () => {
 
 const quickMaths = (num) => {
     num.total = 0
+    let cache = []
     for (const i of num.values) {
         num.total += i.num
+        cache.push(i.num)
     }
     num.avg = num.total / num.values.length
-    num.min = Math.min(...num.values)
-    num.max = Math.max(...num.values)
+    num.min = Math.min(...cache)
+    num.max = Math.max(...cache)
 }
 
 const getDeatils = async (id) => {
