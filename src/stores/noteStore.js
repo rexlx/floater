@@ -174,7 +174,6 @@ export const useStoreNotes = defineStore('NotesStore', {
         })
       },
     async createNumberTracker(val) {
-        console.log(numbersColRef, 'create')
     const docRef = await addDoc(numbersColRef, {
             date:   val.date,
             name:   val.name,
@@ -206,6 +205,11 @@ export const useStoreNotes = defineStore('NotesStore', {
     getNoteContent: (state) => {
         return (id) => {
             return state.notes.filter(note => note.id === id )[0].content
+          }
+    },
+    getNumberDetails: (state) => {
+        return (id) => {
+            return state.numbers.filter(n => n.id === id )[0]
           }
     },
     totalNotesCount: (state) => {

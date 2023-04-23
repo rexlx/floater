@@ -1,9 +1,9 @@
 <template>
     <div class="card mb-4 has-background-info-light">
-        <div class="title has-text-centered">
+        <div class="title has-text-centered" @click="getDeatils(num.id)">
             {{ num.name }}
         </div>
-        <div class="card-content">
+        <div class="card-content" @click="getDeatils(num.id)">
             <div class="content has-text-centered">
                 <!-- total: {{ num.total }}, average: {{ num.avg }} -->
                 {{ summary }}
@@ -20,6 +20,13 @@
 <script setup>
 import { useStoreNotes } from '@/stores/noteStore.js'
 import { ref, computed } from "vue";
+import { useRoute, useRouter } from 'vue-router'
+
+// const newValue = ref(null)
+// const addValueRef = ref(null)
+// const newName = ref('')
+// const route = useRoute()
+const router = useRouter()
 
 const props = defineProps(['modelValue', 'num',])
 const emit = defineEmits(['update:modelValue'])
@@ -27,7 +34,11 @@ const newNum = ref(null)
 const storeNotes = useStoreNotes()
 
 const addNum = () => {
-    let n = parseFloat(newNum.value)
+    let d = new Date().toLocaleString()
+    let n = {
+        date: d,
+        num: parseFloat(newNum.value)
+    }
     props.num.values.push(n)
     quickMaths(props.num)
     storeNotes.updateNumber(props.num.id, props.num)
@@ -37,11 +48,15 @@ const addNum = () => {
 const quickMaths = (num) => {
     num.total = 0
     for (const i of num.values) {
-        num.total += i
+        num.total += i.num
     }
     num.avg = num.total / num.values.length
     num.min = Math.min(...num.values)
     num.max = Math.max(...num.values)
+}
+
+const getDeatils = async (id) => {
+    router.push(`/numbers/${id}`)
 }
 
 const summary = computed(() => {

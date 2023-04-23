@@ -18,13 +18,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useStoreNotes } from "@/stores/noteStore.js";
+import { useStoreNotes } from "@/stores/noteStore.js"
 import NumbersPart from '../components/NumberPart.vue'
 import notie from 'notie'
 
 const storeNotes = useStoreNotes()
 const newValue = ref(null)
-const addValueRef = ref(null)
 const newName = ref('')
 
 const createData = () => {
