@@ -28,9 +28,9 @@
                 <RouterLink class="navbar-item" to="/numbers" active-class="is-active">
                 numbers
                 </RouterLink>
-                <RouterLink class="navbar-item" to="/charts" active-class="is-active">
+                <!-- <RouterLink class="navbar-item" to="/charts" active-class="is-active">
                 charts
-                </RouterLink>
+                </RouterLink> -->
             </div>
         </div>
   </div>
