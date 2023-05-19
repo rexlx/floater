@@ -1,6 +1,6 @@
 # floater
 
-This template should help get you started developing with Vue 3 in Vite.
+just another notes/numbers app written in vue. this one is useful to me and has a secret menu that is even more useless to you
 
 ## Recommended IDE Setup
 
