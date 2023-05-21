@@ -1,6 +1,6 @@
 <template>
     <div class="details">
-        <table class="table has-background-primary-light">
+        <table class="table has-background-primary-light is-fullwidth">
             <thead>
                 <tr>
                     <th>min</th>
@@ -18,6 +18,7 @@
                 </tr>
             </tbody>
         </table>
+        <button class="button is-danger is-fullwidth mb-3" @click="deleteNumbers">delete all data</button>
         <!-- "num in storeNotes.numbers" :key="num.id" :num="num" -->
         <div class="card mb-2 has-text-justified has-background-primary" v-for="number in num.values" :key="number">
             {{ number.date }}: <strong class="has-text-grey-dark">{{ number.num }}</strong>
@@ -28,10 +29,11 @@
 <script setup>
     import { reactive, onMounted, computed } from 'vue';
     import { useStoreNotes } from "@/stores/noteStore.js";
-    import { useRoute } from 'vue-router'
+    import { useRoute, useRouter } from 'vue-router'
 
     const storeNotes = useStoreNotes()
     const route = useRoute()
+    const router = useRouter()
 
     const num = reactive({
         min: 0,
@@ -40,6 +42,11 @@
         total: 0,
         values: []
     })
+
+    const deleteNumbers = async () => {
+        storeNotes.deleteNumber(route.params.id)
+        router.push("/numbers/")
+    }
 
     const setDetails = async (num) => {
         let n = storeNotes.getNumberDetails(route.params.id)

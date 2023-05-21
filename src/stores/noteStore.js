@@ -193,6 +193,9 @@ export const useStoreNotes = defineStore('NotesStore', {
             min:    val.min
         })
       },
+      async deleteNumber(id) {
+        await deleteDoc(doc(numbersColRef, id))
+      },
       checkSnapshot(ss) {
         // if a previous user was logged in, their snapshot will still hold a value
         if (ss) {
